@@ -22,265 +22,205 @@ os.environ["OPENAI_MODEL_NAME"] = "gemini-1.5-flash"
 
 print(f"✅ Using Gemini API")
 
-
-
 # Agent 1: Competitor Intelligence Researcher
 intelligence_agent = Agent(
     role='Competitive Intelligence Researcher',
-    goal='Identify and analyze top competitors, brands, and creators in the {topic} space',
-    backstory="""You are an elite market researcher with deep expertise in competitive analysis.
-    You can identify the major players in any niche, understand their content strategies,
-    and recognize what makes them successful. You have access to broad market knowledge
-    and can spot trends across platforms.""",
+    goal='Identify and analyze top competitors, their strategies, and market positioning in the {topic} space',
+    backstory="""You are an expert competitive intelligence analyst with 10+ years of experience 
+    researching market leaders. You excel at identifying key players, understanding their content 
+    strategies, and spotting patterns in what makes competitors successful.""",
     tools=[research_competitors],
     verbose=True,
     allow_delegation=False
 )
 
 # Agent 2: Trend Analysis Specialist
-trend_analyst = Agent(
+trend_agent = Agent(
     role='Trend Analysis Specialist',
-    goal='Analyze current content trends, viral angles, and winning formats for {topic}',
-    backstory="""You are a trend forecasting expert who understands social media algorithms,
-    audience psychology, and viral mechanics. You can identify what content formats are
-    currently winning, what hooks are working, and predict what will resonate with audiences.
-    You track engagement patterns across all major platforms.""",
+    goal='Discover viral content patterns, trending topics, and engagement drivers in the {topic} niche',
+    backstory="""You are a trend forecasting expert who can spot emerging patterns before they 
+    go mainstream. You understand what makes content viral and can identify the hooks, angles, 
+    and formats that drive maximum engagement.""",
     tools=[analyze_trends],
     verbose=True,
     allow_delegation=False
 )
 
 # Agent 3: Strategic Gap Analyzer
-gap_analyst = Agent(
-    role='Strategic Opportunity Analyst',
-    goal='Identify content gaps, missed opportunities, and competitive weaknesses in {topic}',
-    backstory="""You are a strategic analyst who excels at finding opportunities others miss.
-    You can analyze competitor strategies and identify exactly where they're weak,
-    what audiences they're ignoring, and what angles they haven't covered. You find
-    the white space where new brands can win.""",
+gap_agent = Agent(
+    role='Strategic Gap Analyzer',
+    goal='Identify underserved audiences, missed content angles, and opportunities competitors are ignoring',
+    backstory="""You are a strategic consultant who specializes in finding white space opportunities. 
+    You can see what competitors are missing and identify content gaps that represent untapped 
+    potential for engagement and authority building.""",
     tools=[find_content_gaps],
     verbose=True,
     allow_delegation=False
 )
 
 # Agent 4: Content Strategist & Creator
-content_creator = Agent(
-    role='Strategic Content Creator',
-    goal='Generate unique, competitor-inspired content ideas that outperform the market',
-    backstory="""You are a brilliant content strategist and creator who can generate
-    dozens of unique, engaging content ideas. You understand how to take market insights
-    and turn them into viral content. You create hooks that stop scrolls, angles that
-    engage audiences, and ideas that fill gaps competitors missed. Your content always
-    stands out and performs exceptionally well.""",
+content_strategist = Agent(
+    role='Content Strategist & Idea Generator',
+    goal='Generate 25-30 unique, high-value content ideas that fill gaps and outperform competitors',
+    backstory="""You are a creative content strategist who combines competitive intelligence with 
+    audience psychology. You craft content ideas that stop scrolls, spark conversations, and 
+    establish thought leadership. You understand different content formats (carousels, threads, 
+    videos, long-form) and can adapt ideas for maximum impact.""",
     verbose=True,
     allow_delegation=False
 )
 
 # Agent 5: Multi-Platform Content Writer
 content_writer = Agent(
-    role='Multi-Platform Content Specialist',
-    goal='Write polished, ready-to-publish posts optimized for each platform',
-    backstory="""You are an expert copywriter who understands the nuances of every platform.
-    You write LinkedIn posts that drive professional engagement, Instagram captions that
-    inspire action, Twitter threads that go viral, and TikTok scripts that hook viewers
-    in 3 seconds. Each post you create is platform-optimized and ready to publish.""",
+    role='Multi-Platform Content Writer',
+    goal='Write 5 platform-optimized posts ready for LinkedIn, Instagram, Twitter, TikTok, and Facebook',
+    backstory="""You are a multi-platform content writer who understands the unique voice, format, 
+    and engagement patterns of each social platform. You write hooks that grab attention, body 
+    content that delivers value, and CTAs that drive action. You know LinkedIn prefers professional 
+    insights, Instagram loves storytelling with visuals, Twitter rewards punchy threads, TikTok 
+    thrives on hooks and quick value, and Facebook builds community through relatable content.""",
     verbose=True,
     allow_delegation=False
 )
 
-def generate_competitor_intelligence(topic: str, brand_name: str = "Your Brand"):
+def generate_competitor_intelligence(topic: str, brand_name: str) -> dict:
     """
-    Generates comprehensive competitor intelligence and content strategy for a given topic
+    Orchestrates the 5-agent system to generate comprehensive competitor intelligence and content strategy.
     """
     
-    # Task 1: Research Competitive Landscape
+    # Task 1: Research Competitors
     research_task = Task(
-        description=f"""Research and identify the competitive landscape for: {topic}
+        description=f"""
+        Research and analyze the top 5-10 competitors in the {topic} space. Identify:
+        1. Who are the major players and thought leaders
+        2. What content formats they use (videos, carousels, threads, articles)
+        3. What topics and themes they cover most
+        4. Their engagement patterns and audience size
+        5. What makes their best-performing content successful
         
-        Provide a comprehensive analysis including:
-        
-        1. TOP 5-10 MAJOR PLAYERS:
-           - List the biggest brands, creators, and companies dominating this niche
-           - Include both established brands and rising stars
-        
-        2. THEIR CONTENT STRATEGIES:
-           - What types of content they post (educational, entertaining, promotional, etc.)
-           - What formats they use (carousels, videos, threads, single posts)
-           - What themes they focus on
-        
-        3. WHAT'S WORKING FOR THEM:
-           - High-engagement content patterns
-           - Successful angles and approaches
-           - Audience response patterns
-        
-        Be specific with examples and insights.""",
+        Topic: {topic}
+        Brand: {brand_name}
+        """,
         agent=intelligence_agent,
-        expected_output='Detailed competitor landscape with 5-10 major players and their strategies'
+        expected_output="Detailed competitor analysis with 5-10 major players, their strategies, and content patterns"
     )
     
     # Task 2: Analyze Trends
     trend_task = Task(
-        description=f"""Analyze current content trends and viral patterns in the {topic} space.
+        description=f"""
+        Based on the competitor research, analyze trending content in the {topic} niche. Identify:
+        1. What content angles are getting the most engagement right now
+        2. Emerging topics and themes gaining traction
+        3. Viral content patterns (hooks, formats, storytelling styles)
+        4. What types of posts are performing best (educational, inspirational, controversial, etc.)
+        5. Timing and frequency patterns of top performers
         
-        Identify:
-        
-        1. VIRAL ANGLES:
-           - What hooks and angles are getting traction
-           - What narratives are resonating
-           - What emotional triggers are working
-        
-        2. ENGAGEMENT PATTERNS:
-           - What content gets comments vs shares
-           - What formats drive highest engagement
-           - Best posting times and frequencies
-        
-        3. WINNING CONTENT STYLES:
-           - Educational deep-dives
-           - Quick tips and hacks
-           - Personal stories
-           - Data-driven insights
-           - Behind-the-scenes content
-           - Controversial takes
-        
-        Focus on what's trending RIGHT NOW, not last year.""",
-        agent=trend_analyst,
-        expected_output='Comprehensive trend analysis with specific viral angles and patterns'
+        Topic: {topic}
+        """,
+        agent=trend_agent,
+        expected_output="Trend analysis report with viral patterns, top-performing content types, and engagement drivers"
     )
     
-    # Task 3: Find Strategic Gaps
+    # Task 3: Find Content Gaps
     gap_task = Task(
-        description=f"""Based on the competitor landscape analysis, identify strategic opportunities.
+        description=f"""
+        Identify strategic content gaps and opportunities that competitors are missing. Find:
+        1. Underserved audience segments or pain points not being addressed
+        2. Content formats competitors aren't using effectively
+        3. Topics with high demand but low quality supply
+        4. Unique angles and perspectives that could differentiate {brand_name}
+        5. Opportunities to provide more depth, clarity, or value than competitors
         
-        Find:
-        
-        1. COMPETITOR WEAKNESSES:
-           - Gaps in their messaging
-           - Topics they avoid
-           - Angles they miss
-           - Audience questions they don't answer
-        
-        2. MISSED ANGLES:
-           - Perspectives not being shared
-           - Content formats underutilized
-           - Storytelling opportunities
-        
-        3. UNDERSERVED AUDIENCES:
-           - Demographic segments being ignored
-           - Pain points not addressed
-           - Questions left unanswered
-        
-        These gaps are where {brand_name} can win and differentiate.""",
-        agent=gap_analyst,
-        expected_output='Strategic gap analysis with specific opportunities for differentiation'
+        Topic: {topic}
+        Brand: {brand_name}
+        """,
+        agent=gap_agent,
+        expected_output="Gap analysis with 5-7 major opportunities for differentiation and unique content angles"
     )
     
     # Task 4: Generate Content Ideas
     content_ideas_task = Task(
-        description=f"""Generate 25-30 unique, competitor-inspired content ideas for {brand_name} about {topic}.
+        description=f"""
+        Based on competitor research, trends, and gaps, generate 25-30 unique content ideas for {brand_name}.
         
-        Create ideas across these categories:
+        Requirements:
+        - Each idea should fill a gap or outperform competitors
+        - Include diverse formats: carousels, threads, videos, long-form posts, polls, stories
+        - Mix content types: educational, inspirational, controversial, behind-the-scenes, case studies
+        - Include attention-grabbing hooks for each idea
+        - Categorize ideas by platform suitability (LinkedIn, Instagram, Twitter, TikTok, Facebook)
+        - Ensure ideas are specific, actionable, and unique to {brand_name}
         
-        1. SHORT-FORM IDEAS (8-10 ideas):
-           - Quick tips
-           - Stats/facts
-           - Myth-busters
-           - Hot takes
-        
-        2. LONG-FORM IDEAS (5-7 ideas):
-           - Deep-dive guides
-           - Case studies
-           - Personal stories
-           - Industry analyses
-        
-        3. CAROUSEL/THREAD IDEAS (5-7 ideas):
-           - Step-by-step tutorials
-           - Frameworks
-           - Checklists
-           - Comparison posts
-        
-        4. VIDEO/REEL IDEAS (5-7 ideas):
-           - How-to demonstrations
-           - Behind-the-scenes
-           - Reactions
-           - Quick explainers
-        
-        5. ENGAGEMENT DRIVERS (3-5 ideas):
-           - Questions/polls
-           - Fill-in-the-blank
-           - This or that
-           - Controversial discussions
-        
-        Each idea must:
-        - Fill a gap competitors missed
-        - Have a specific hook
-        - Be unique and differentiated
-        - Be designed to outperform competitor content
-        
-        Include the HOOK for each idea.""",
-        agent=content_creator,
-        expected_output='25-30 unique, categorized content ideas with specific hooks'
+        Topic: {topic}
+        Brand: {brand_name}
+        """,
+        agent=content_strategist,
+        expected_output="25-30 unique content ideas with hooks, formats, and platform recommendations"
     )
     
-    # Task 5: Write Ready-to-Publish Posts
-    writing_task = Task(
-        description=f"""Write 5 complete, ready-to-publish posts for {brand_name} about {topic}.
-        
-        Create one post optimized for EACH platform:
+    # Task 5: Write Platform-Specific Posts
+    content_writing_task = Task(
+        description=f"""
+        Write 5 complete, ready-to-publish posts for {brand_name}, one for each platform:
         
         1. LINKEDIN POST:
-           - Professional but engaging tone
-           - 150-200 words
-           - Industry insights focus
-           - Strong hook + value + CTA
-           - 3-5 relevant hashtags
+           - Professional tone with valuable insights
+           - 1200-1500 characters
+           - Strong hook, 3-5 key points, clear CTA
+           - Include relevant hashtags (5-8)
         
         2. INSTAGRAM CAPTION:
-           - Conversational, authentic tone
-           - 100-150 words
-           - Storytelling approach
-           - Emojis for visual appeal
-           - 10-15 hashtags
-           - Clear CTA
+           - Storytelling approach with visual cues
+           - 1000-1300 characters
+           - Engaging hook, narrative flow, emotion
+           - 10-15 relevant hashtags
+           - Mention "Link in bio" or CTA
         
-        3. TWITTER/X THREAD (3-5 tweets):
-           - Punchy, concise style
-           - Hook in first tweet
-           - Value-packed thread
-           - Controversial angle or insight
-           - Relevant hashtags
+        3. TWITTER/X THREAD:
+           - 5-7 tweets forming a cohesive thread
+           - First tweet = killer hook
+           - Each tweet = one clear point
+           - Final tweet = CTA or summary
+           - Conversational, punchy tone
         
         4. TIKTOK SCRIPT:
            - Hook in first 3 seconds
-           - 60-90 second script
-           - Casual, energetic tone
-           - Visual cues included
-           - Trending sound suggestion
+           - Visual cues for video editing
+           - 60-90 seconds of content
+           - Clear value delivery
+           - Trending sound suggestions
         
         5. FACEBOOK POST:
-           - Community-focused tone
-           - 100-150 words
+           - Community-building tone
            - Question or discussion starter
-           - Relatable angle
-           - 2-3 hashtags
+           - 500-800 characters
+           - Relatable and conversational
+           - Encourages comments and shares
         
-        Each post must:
-        - Fill a competitor gap
-        - Use insights from trend analysis
-        - Be completely unique
-        - Be ready to copy-paste-publish
-        - Outperform typical competitor content
+        Topic: {topic}
+        Brand: {brand_name}
         
-        Format clearly with platform labels.""",
+        Make each post authentic to the platform while maintaining {brand_name}'s voice.
+        """,
         agent=content_writer,
-        expected_output='5 complete, platform-optimized posts ready for immediate publishing'
+        expected_output="5 complete, platform-optimized posts ready for publishing"
     )
     
-    # Create and execute the crew
+    # Create and run the crew
     crew = Crew(
-        agents=[intelligence_agent, trend_analyst, gap_analyst, content_creator, content_writer],
-        tasks=[research_task, trend_task, gap_task, content_ideas_task, writing_task],
+        agents=[intelligence_agent, trend_agent, gap_agent, content_strategist, content_writer],
+        tasks=[research_task, trend_task, gap_task, content_ideas_task, content_writing_task],
         verbose=True
     )
     
-    result = crew.kickoff(inputs={"topic": topic, "brand_name": brand_name})
-    return result
+    # Execute the crew
+    result = crew.kickoff()
+    
+    return {
+        'competitor_research': research_task.output,
+        'trend_analysis': trend_task.output,
+        'content_gaps': gap_task.output,
+        'content_ideas': content_ideas_task.output,
+        'platform_posts': content_writing_task.output,
+        'full_report': result
+    }
