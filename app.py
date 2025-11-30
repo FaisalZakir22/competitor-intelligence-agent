@@ -4,16 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# DEBUG: Check if secret exists
-st.write("🔍 **Debug Info:**")
-try:
-    google_key = st.secrets.get("GOOGLE_API_KEY")
-    if google_key:
-        st.success(f"✅ GOOGLE_API_KEY found in secrets! (starts with: {google_key[:10]}...)")
-    else:
-        st.error("❌ GOOGLE_API_KEY is None")
-except Exception as e:
-    st.error(f"❌ Error reading secrets: {e}")
+
 
 # Also check all available secrets
 st.write("Available secret keys:", list(st.secrets.keys()))
