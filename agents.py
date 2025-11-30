@@ -5,20 +5,25 @@ import os
 
 load_dotenv()
 
-# GROQ CONFIGURATION
-groq_api_key = os.getenv("GROQ_API_KEY")
+# Use GEMINI PRO (NO RATE LIMITS!)
+gemini_api_key = os.getenv("GOOGLE_API_KEY")
 
-if not groq_api_key:
-    raise ValueError("❌ GROQ_API_KEY not found in .env file!")
+if not gemini_api_key:
+    raise ValueError("❌ GOOGLE_API_KEY not found in .env file!")
 
-# Set environment variables for CrewAI to use Groq
-os.environ["OPENAI_MODEL_NAME"] = "llama-3.1-8b-instant"
+# Configure Gemini for CrewAI
+os.environ["OPENAI_API_KEY"] = gemini_api_key
+os.environ["OPENAI_API_BASE"] = "https://generativelanguage.googleapis.com/v1beta/openai/"
+os.environ["OPENAI_MODEL_NAME"] = "gemini-1.5-flash"
 
+print(f"✅ Using Gemini Pro API")
 
-os.environ["OPENAI_API_BASE"] = "https://api.groq.com/openai/v1"
-os.environ["OPENAI_MODEL_NAME"] = "llama-3.3-70b-versatile"
+# Rest of your agents code stays the same...
+# Agent 1: Competitor Intelligence Researcher
+intelligence_agent = Agent(
+    role='Competitive Intelligence Researcher',
+    # ... (keep everything else as is)
 
-print(f"✅ Using Groq API with model: llama-3.3-70b-versatile")
 
 # Agent 1: Competitor Intelligence Researcher
 intelligence_agent = Agent(
