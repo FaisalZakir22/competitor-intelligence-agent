@@ -15,11 +15,12 @@ except:
 if not gemini_api_key:
     raise ValueError("❌ GOOGLE_API_KEY not found!")
 
-# Set environment variables for CrewAI to use Gemini
+# Set environment variables for CrewAI - use OpenAI format with Gemini endpoint
+os.environ["OPENAI_API_KEY"] = gemini_api_key
+os.environ["OPENAI_MODEL_NAME"] = "gemini/gemini-1.5-flash"
 os.environ["GEMINI_API_KEY"] = gemini_api_key
-os.environ["GOOGLE_API_KEY"] = gemini_api_key
 
-print(f"✅ Using Gemini API")
+print(f"✅ Using Gemini via LiteLLM")
 
 # Agent 1: Competitor Intelligence Researcher
 intelligence_agent = Agent(
