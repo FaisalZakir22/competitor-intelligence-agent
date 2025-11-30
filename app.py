@@ -1,275 +1,163 @@
 import streamlit as st
-import os
-from dotenv import load_dotenv
+import time
 
-load_dotenv()
-
-
-
-
-# Import agents after dependency check
+# Import agents after Streamlit is loaded
 try:
     from agents import generate_competitor_intelligence
-except ImportError as e:
-    st.error(f"❌ Error importing agents: {str(e)}")
-    st.info("💡 Make sure all dependencies are installed in requirements.txt")
+except Exception as e:
+    st.error(f"❌ Error loading agents: {str(e)}")
     st.stop()
-# Page configuration
+
+# Page config
 st.set_page_config(
-    page_title="Competitor Intelligence Engine", 
-    page_icon="🔍", 
+    page_title="Competitor Intelligence Agent",
+    page_icon="🤖",
     layout="wide"
 )
 
-# Custom CSS
+# Title
+st.title("🤖 Autonomous Competitor Intelligence Engine")
+st.markdown("*Powered by 5 AI Agents | CrewAI + Gemini*")
+
+# Description
 st.markdown("""
-<style>
-    .big-title {
-        font-size: 3rem;
-        font-weight: bold;
-        text-align: center;
-        margin-bottom: 1rem;
-    }
-    .subtitle {
-        text-align: center;
-        font-size: 1.2rem;
-        color: #666;
-        margin-bottom: 2rem;
-    }
-    .stButton>button {
-        width: 100%;
-        height: 3rem;
-        font-size: 1.2rem;
-        font-weight: bold;
-    }
-</style>
-""", unsafe_allow_html=True)
+This AI system analyzes competitors, identifies content gaps, and generates:
+- ✅ **25-30 unique content ideas**
+- ✅ **5 ready-to-publish posts** (LinkedIn, Instagram, Twitter, TikTok, Facebook)
+""")
 
-# Header
-st.markdown('<p class="big-title">🔍 Competitor Intelligence Engine</p>', unsafe_allow_html=True)
-st.markdown('<p class="subtitle">Autonomous competitor research + content strategy powered by AI agents</p>', unsafe_allow_html=True)
-
-# Main prompt
-st.markdown("---")
-
-# Center column for input
-col_spacer1, col_main, col_spacer2 = st.columns([1, 2, 1])
-
-with col_main:
-    st.markdown("### 💭 What topic do you want competitor-powered content ideas for?")
+# Input form
+with st.form("intelligence_form"):
+    col1, col2 = st.columns(2)
     
-    topic = st.text_input(
-        "Enter your topic/niche:",
-        placeholder="Example: AI automation tools, fitness coaching, sustainable fashion, etc.",
-        label_visibility="collapsed"
-    )
+    with col1:
+        topic = st.text_input(
+            "🎯 Topic/Niche",
+            placeholder="e.g., AI productivity tools, fitness coaching",
+            help="Enter the niche or topic you want to analyze"
+        )
     
-    brand_name = st.text_input(
-        "Your brand name (optional):",
-        placeholder="Your Brand",
-        value="Your Brand"
-    )
+    with col2:
+        brand_name = st.text_input(
+            "🏢 Your Brand Name",
+            placeholder="e.g., MyBrand, TechStartup",
+            help="Your brand or company name"
+        )
     
-    st.markdown("")
-    generate_btn = st.button("🚀 Generate Competitor Intelligence Report", type="primary")
+    submit = st.form_submit_button("🚀 Generate Competitor Intelligence Report", use_container_width=True)
 
-# Results section
-if generate_btn:
-    if not topic:
-        st.error("⚠️ Please enter a topic!")
+# Process form submission
+if submit:
+    if not topic or not brand_name:
+        st.error("⚠️ Please fill in both fields!")
     else:
-        st.markdown("---")
-        st.markdown("## 🤖 AI Agents Working...")
-        
         # Progress tracking
         progress_container = st.container()
         
         with progress_container:
-            # Agent 1
-            with st.status("🔍 Agent 1: Researching competitive landscape...", expanded=True) as status1:
-                st.write(f"Identifying top brands and creators in {topic}")
-                st.write("Analyzing their content strategies...")
-                time.sleep(3)
-                st.write("✅ Competitor landscape mapped")
-                status1.update(label="✅ Competitive Intelligence Complete", state="complete")
+            st.markdown("---")
+            st.subheader("🔄 Agents Working...")
             
-            # Agent 2
-            with st.status("📈 Agent 2: Analyzing trends and viral patterns...", expanded=True) as status2:
-                st.write("Scanning current trends and engagement patterns")
-                st.write("Identifying winning content formats...")
-                time.sleep(3)
-                st.write("✅ Trend analysis complete")
-                status2.update(label="✅ Trend Analysis Complete", state="complete")
+            # Agent status
+            agent_status = st.empty()
+            progress_bar = st.progress(0)
             
-            # Agent 3
-            with st.status("🎯 Agent 3: Finding strategic gaps...", expanded=True) as status3:
-                st.write("Analyzing competitor weaknesses")
-                st.write("Identifying content opportunities...")
-                time.sleep(3)
-                st.write("✅ Strategic gaps identified")
-                status3.update(label="✅ Gap Analysis Complete", state="complete")
+            # Simulate agent progress (since CrewAI doesn't provide real-time updates)
+            agents = [
+                "🔍 Researching Competitors",
+                "📊 Analyzing Trends",
+                "🎯 Finding Content Gaps",
+                "💡 Generating Content Ideas",
+                "✍️ Crafting Platform Posts"
+            ]
             
-            # Agent 4
-            with st.status("💡 Agent 4: Generating content ideas...", expanded=True) as status4:
-                st.write("Creating 25-30 unique content concepts")
-                st.write("Designing hooks and angles...")
-                time.sleep(3)
-                st.write("✅ Content ideas generated")
-                status4.update(label="✅ Content Ideas Generated", state="complete")
+            # Show progress
+            for i, agent in enumerate(agents):
+                agent_status.info(f"**Agent {i+1}/5:** {agent}")
+                progress_bar.progress((i + 1) * 20)
+                time.sleep(0.5)  # Brief delay for UX
             
-            # Agent 5
-            with st.status("✍️ Agent 5: Writing ready-to-publish posts...", expanded=True) as status5:
-                st.write("Crafting platform-optimized content")
-                st.write("Writing LinkedIn, Instagram, Twitter, TikTok posts...")
-                
-                try:
+            # Run the crew
+            try:
+                with st.spinner("🤖 AI Agents analyzing..."):
                     result = generate_competitor_intelligence(topic, brand_name)
-                    
-                    st.write("✅ Posts ready to publish!")
-                    status5.update(label="✅ Content Writing Complete", state="complete")
-                    
-                    # Store in session state
-                    st.session_state['report'] = result
-                    st.session_state['topic'] = topic
-                    st.session_state['brand'] = brand_name
-                    st.session_state['success'] = True
-                    
-                except Exception as e:
-                    st.error(f"❌ Error: {str(e)}")
-                    st.info("💡 Make sure your OpenAI API key is set in .env file")
-                    status5.update(label="❌ Generation Failed", state="error")
-                    st.session_state['success'] = False
+                
+                agent_status.success("✅ All agents completed successfully!")
+                progress_bar.progress(100)
+                
+                # Display results
+                st.markdown("---")
+                st.success("🎉 **Report Generated Successfully!**")
+                
+                # Results tabs
+                tab1, tab2, tab3, tab4, tab5 = st.tabs([
+                    "📊 Competitor Research",
+                    "📈 Trend Analysis",
+                    "🎯 Content Gaps",
+                    "💡 Content Ideas (25-30)",
+                    "✍️ Platform Posts (5)"
+                ])
+                
+                with tab1:
+                    st.markdown("### 🔍 Competitor Intelligence Report")
+                    st.markdown(str(result.get('competitor_research', 'No data')))
+                
+                with tab2:
+                    st.markdown("### 📈 Trending Content Patterns")
+                    st.markdown(str(result.get('trend_analysis', 'No data')))
+                
+                with tab3:
+                    st.markdown("### 🎯 Strategic Content Gaps")
+                    st.markdown(str(result.get('content_gaps', 'No data')))
+                
+                with tab4:
+                    st.markdown("### 💡 25-30 Unique Content Ideas")
+                    st.markdown(str(result.get('content_ideas', 'No data')))
+                
+                with tab5:
+                    st.markdown("### ✍️ Ready-to-Publish Posts")
+                    st.markdown(str(result.get('platform_posts', 'No data')))
+                
+                # Download button
+                st.markdown("---")
+                full_report = f"""
+# COMPETITOR INTELLIGENCE REPORT
+**Topic:** {topic}
+**Brand:** {brand_name}
 
-# Display results
-if st.session_state.get('success', False):
-    st.markdown("---")
-    st.markdown("## 📊 Your Competitor Intelligence Report")
-    
-    # Tabs for organized sections
-    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
-        "A) Competitor Landscape",
-        "B) Key Trends",
-        "C) Strategic Gaps",
-        "D) Content Ideas (25-30)",
-        "E) Ready-to-Post (5 Drafts)",
-        "📥 Full Report"
-    ])
-    
-    report_text = st.session_state.get('report', '')
-    
-    with tab1:
-        st.markdown("### 🏢 Competitor Landscape Analysis")
-        st.markdown("**Major Players | Content Strategies | What's Working**")
-        st.info(f"Analysis for: **{st.session_state.get('topic', '')}**")
-        st.text_area("Section A: Competitors", report_text, height=400, key="tab1_content")
-    
-    with tab2:
-        st.markdown("### 📈 Key Trends They're Following")
-        st.markdown("**Viral Angles | Engagement Patterns | Winning Content Styles**")
-        st.text_area("Section B: Trends", report_text, height=400, key="tab2_content")
-    
-    with tab3:
-        st.markdown("### 🎯 Competitor Weaknesses (Your Opportunities)")
-        st.markdown("**Messaging Gaps | Missed Angles | Underserved Audiences**")
-        st.success("These are your competitive advantages!")
-        st.text_area("Section C: Strategic Gaps", report_text, height=400, key="tab3_content")
-    
-    with tab4:
-        st.markdown("### 💡 Your Content Ideas (25-30 Unique Concepts)")
-        st.markdown("**Short-form | Long-form | Carousels | Videos | Engagement Drivers**")
-        st.text_area("Section D: Content Ideas", report_text, height=500, key="tab4_content")
-    
-    with tab5:
-        st.markdown("### ✍️ 5 Ready-to-Publish Posts")
-        st.markdown("**LinkedIn | Instagram | Twitter | TikTok | Facebook**")
-        st.success("Copy, paste, and publish these immediately!")
-        st.text_area("Section E: Ready Posts", report_text, height=600, key="tab5_content")
-        
-        # Download buttons
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            st.download_button(
-                "📥 Download All Posts",
-                report_text,
-                file_name=f"{st.session_state.get('topic', 'content').replace(' ', '_')}_posts.txt",
-                use_container_width=True
-            )
-        with col2:
-            if st.button("📋 Copy All", use_container_width=True):
-                st.success("✅ Copied to clipboard!")
-        with col3:
-            if st.button("🔄 Generate New Report", use_container_width=True):
-                st.session_state['success'] = False
-                st.rerun()
-    
-    with tab6:
-        st.markdown("### 📄 Complete Intelligence Report")
-        st.text_area("Full Report", report_text, height=800, key="full_report")
-        
-        st.download_button(
-            "📥 Download Complete Report",
-            report_text,
-            file_name=f"competitor_intelligence_{st.session_state.get('topic', 'report').replace(' ', '_')}.txt",
-            use_container_width=True
-        )
+## COMPETITOR RESEARCH
+{result.get('competitor_research', 'N/A')}
 
-# Sidebar
-with st.sidebar:
-    st.markdown("## 🔍 About This Engine")
-    
-    st.markdown("""
-    ### What Makes This Unique
-    
-    ✅ **Zero manual input needed**  
-    Just give a topic - no URLs required
-    
-    ✅ **Autonomous research**  
-    AI finds competitors automatically
-    
-    ✅ **25-30 content ideas**  
-    Across all formats and platforms
-    
-    ✅ **5 ready-to-publish posts**  
-    Platform-optimized and ready now
-    
-    ✅ **Strategic intelligence**  
-    Not just ideas - competitive advantages
-    """)
-    
-    st.markdown("---")
-    st.markdown("### 🤖 5-Agent System")
-    st.markdown("""
-    **🔍 Intelligence Researcher**  
-    Finds top competitors
-    
-    **📈 Trend Analyst**  
-    Tracks viral patterns
-    
-    **🎯 Gap Analyzer**  
-    Finds opportunities
-    
-    **💡 Content Strategist**  
-    Generates 25-30 ideas
-    
-    **✍️ Content Writer**  
-    Writes 5 ready posts
-    """)
-    
-    st.markdown("---")
-    
-    if st.button("🗑️ Clear Session", use_container_width=True):
-        st.session_state.clear()
-        st.rerun()
-    
-    st.markdown("---")
-    st.caption("⚙️ API: Loaded from .env")
+## TREND ANALYSIS
+{result.get('trend_analysis', 'N/A')}
+
+## CONTENT GAPS
+{result.get('content_gaps', 'N/A')}
+
+## CONTENT IDEAS
+{result.get('content_ideas', 'N/A')}
+
+## PLATFORM POSTS
+{result.get('platform_posts', 'N/A')}
+"""
+                
+                st.download_button(
+                    label="📥 Download Full Report",
+                    data=full_report,
+                    file_name=f"competitor_intelligence_{topic.replace(' ', '_')}.txt",
+                    mime="text/plain",
+                    use_container_width=True
+                )
+                
+            except Exception as e:
+                agent_status.error(f"❌ Error: {str(e)}")
+                st.error(f"**Error Details:** {str(e)}")
+                st.info("💡 Make sure your API key is valid and has sufficient quota.")
 
 # Footer
 st.markdown("---")
 st.markdown("""
-<div style='text-align: center; padding: 2rem; color: #666;'>
-    <p><strong>🔍 Autonomous Competitor Intelligence Engine</strong></p>
-    <p>Built for Rooman AI Challenge | 5-Agent CrewAI System</p>
-    <p>🎯 Research → Analyze → Strategize → Create → Publish</p>
+<div style='text-align: center; color: #666;'>
+    <p>Built with CrewAI + Gemini | 5-Agent Multi-Platform System</p>
 </div>
 """, unsafe_allow_html=True)
