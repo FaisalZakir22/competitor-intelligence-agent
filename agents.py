@@ -5,18 +5,22 @@ import os
 
 load_dotenv()
 
-# Use GEMINI PRO (NO RATE LIMITS!)
-gemini_api_key = os.getenv("GOOGLE_API_KEY")
+# Get API key from Streamlit secrets or environment
+try:
+    import streamlit as st
+    gemini_api_key = st.secrets.get("GOOGLE_API_KEY", os.getenv("GOOGLE_API_KEY"))
+except:
+    gemini_api_key = os.getenv("GOOGLE_API_KEY")
 
 if not gemini_api_key:
-    raise ValueError("❌ GOOGLE_API_KEY not found in .env file!")
+    raise ValueError("❌ GOOGLE_API_KEY not found!")
 
 # Configure Gemini for CrewAI
 os.environ["OPENAI_API_KEY"] = gemini_api_key
 os.environ["OPENAI_API_BASE"] = "https://generativelanguage.googleapis.com/v1beta/openai/"
 os.environ["OPENAI_MODEL_NAME"] = "gemini-1.5-flash"
 
-print(f"✅ Using Gemini Pro API")
+print(f"✅ Using Gemini API")
 
 
 
