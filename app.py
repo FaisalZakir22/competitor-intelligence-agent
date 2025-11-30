@@ -11,12 +11,12 @@ except Exception as e:
 # Page config with custom theme
 st.set_page_config(
     page_title="Competitor Intelligence Engine",
-    page_icon="🚀",
+    page_icon="🌙",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-# Custom CSS for premium aesthetics
+# Custom CSS for midnight purple aesthetic
 st.markdown("""
 <style>
     /* Import Google Fonts */
@@ -27,49 +27,72 @@ st.markdown("""
         font-family: 'Inter', sans-serif;
     }
     
-    /* Main container */
+    /* Main container - Midnight Purple Background */
     .main {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 2rem;
+        background: linear-gradient(135deg, #1a0b2e 0%, #2d1b4e 50%, #1a0b2e 100%);
+        background-attachment: fixed;
+    }
+    
+    /* Animated background particles */
+    .main::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+            radial-gradient(circle at 20% 30%, rgba(138, 92, 246, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 70%, rgba(196, 181, 253, 0.08) 0%, transparent 50%),
+            radial-gradient(circle at 50% 50%, rgba(167, 139, 250, 0.05) 0%, transparent 70%);
+        pointer-events: none;
+        z-index: 0;
     }
     
     /* Content wrapper */
     .block-container {
         max-width: 1200px;
         padding: 3rem 2rem;
-        background: rgba(255, 255, 255, 0.98);
+        background: rgba(30, 20, 50, 0.6);
         border-radius: 24px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-        backdrop-filter: blur(10px);
+        border: 1px solid rgba(167, 139, 250, 0.2);
+        box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        position: relative;
+        z-index: 1;
     }
     
     /* Hero section */
     .hero-title {
         font-size: 3.5rem;
         font-weight: 700;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #a78bfa 0%, #c4b5fd 50%, #8b5cf6 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         text-align: center;
         margin-bottom: 0.5rem;
         line-height: 1.2;
+        text-shadow: 0 0 40px rgba(167, 139, 250, 0.3);
     }
     
     .hero-subtitle {
         font-size: 1.1rem;
-        color: #64748b;
+        color: #c4b5fd;
         text-align: center;
         margin-bottom: 1rem;
         font-weight: 400;
+        text-shadow: 0 2px 10px rgba(167, 139, 250, 0.3);
     }
     
     .hero-description {
         font-size: 1rem;
-        color: #475569;
+        color: #d4c5f9;
         text-align: center;
         max-width: 700px;
         margin: 0 auto 2rem auto;
-        line-height: 1.6;
+        line-height: 1.7;
     }
     
     /* Feature badges */
@@ -85,34 +108,55 @@ st.markdown("""
         display: inline-flex;
         align-items: center;
         padding: 0.5rem 1.2rem;
-        background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
-        border: 1px solid #667eea30;
+        background: rgba(167, 139, 250, 0.15);
+        border: 1px solid rgba(167, 139, 250, 0.3);
         border-radius: 50px;
         font-size: 0.9rem;
         font-weight: 500;
-        color: #667eea;
+        color: #c4b5fd;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+    }
+    
+    .badge:hover {
+        background: rgba(167, 139, 250, 0.25);
+        border-color: rgba(167, 139, 250, 0.5);
+        transform: translateY(-2px);
     }
     
     /* Input styling */
     .stTextInput > div > div > input {
         border-radius: 12px;
-        border: 2px solid #e2e8f0;
-        padding: 0.8rem 1.2rem;
+        border: 1px solid rgba(167, 139, 250, 0.3);
+        padding: 0.9rem 1.3rem;
         font-size: 1rem;
         transition: all 0.3s ease;
-        background: #f8fafc;
+        background: rgba(30, 20, 50, 0.5);
+        color: #e9d5ff;
+        backdrop-filter: blur(10px);
+    }
+    
+    .stTextInput > div > div > input::placeholder {
+        color: #a78bfa;
+        opacity: 0.6;
     }
     
     .stTextInput > div > div > input:focus {
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        background: white;
+        border-color: #a78bfa;
+        box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.2);
+        background: rgba(30, 20, 50, 0.7);
+        outline: none;
+    }
+    
+    .stTextInput label {
+        color: #c4b5fd !important;
+        font-weight: 500;
     }
     
     /* Button styling */
     .stButton > button {
         width: 100%;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
         color: white;
         border: none;
         border-radius: 12px;
@@ -121,63 +165,132 @@ st.markdown("""
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .stButton > button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s ease;
+    }
+    
+    .stButton > button:hover::before {
+        left: 100%;
     }
     
     .stButton > button:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 25px rgba(102, 126, 234, 0.5);
+        box-shadow: 0 12px 35px rgba(139, 92, 246, 0.6);
     }
     
     /* Progress section */
     .progress-container {
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        background: rgba(30, 20, 50, 0.4);
         padding: 2rem;
         border-radius: 16px;
         margin: 2rem 0;
-        border: 1px solid #e2e8f0;
+        border: 1px solid rgba(167, 139, 250, 0.2);
+        backdrop-filter: blur(10px);
+    }
+    
+    .progress-container h3 {
+        color: #c4b5fd;
     }
     
     .agent-card {
-        background: white;
+        background: rgba(45, 27, 78, 0.5);
         padding: 1.2rem;
         border-radius: 12px;
         margin: 0.8rem 0;
-        border-left: 4px solid #667eea;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        border-left: 4px solid #a78bfa;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
     }
     
     .agent-card:hover {
-        transform: translateX(4px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateX(8px);
+        box-shadow: 0 6px 25px rgba(167, 139, 250, 0.3);
+        background: rgba(45, 27, 78, 0.7);
+    }
+    
+    .agent-card strong {
+        color: #e9d5ff;
+    }
+    
+    .agent-card small {
+        color: #c4b5fd;
     }
     
     /* Tabs styling */
     .stTabs [data-baseweb="tab-list"] {
         gap: 0.5rem;
-        background: #f8fafc;
+        background: rgba(30, 20, 50, 0.4);
         padding: 0.5rem;
         border-radius: 12px;
+        border: 1px solid rgba(167, 139, 250, 0.2);
     }
     
     .stTabs [data-baseweb="tab"] {
         border-radius: 8px;
         padding: 0.8rem 1.5rem;
         font-weight: 500;
+        color: #c4b5fd;
         transition: all 0.3s ease;
+        border: none;
     }
     
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
         color: white;
     }
     
+    .stTabs [data-baseweb="tab"]:hover {
+        background: rgba(167, 139, 250, 0.2);
+    }
+    
+    /* Markdown content in tabs */
+    .stMarkdown {
+        color: #e9d5ff;
+    }
+    
+    /* Result header */
+    .result-header {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #e9d5ff;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #a78bfa;
+    }
+    
     /* Success/Error messages */
-    .stSuccess, .stError, .stInfo {
+    .stSuccess {
+        background: rgba(16, 185, 129, 0.15);
+        border: 1px solid rgba(16, 185, 129, 0.3);
         border-radius: 12px;
-        padding: 1rem 1.5rem;
-        border: none;
+        color: #6ee7b7;
+    }
+    
+    .stError {
+        background: rgba(239, 68, 68, 0.15);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        border-radius: 12px;
+        color: #fca5a5;
+    }
+    
+    .stInfo {
+        background: rgba(59, 130, 246, 0.15);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        border-radius: 12px;
+        color: #93c5fd;
     }
     
     /* Download button */
@@ -189,30 +302,61 @@ st.markdown("""
         padding: 1rem 2rem;
         font-weight: 600;
         transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
     }
     
     .stDownloadButton > button:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4);
+        box-shadow: 0 12px 35px rgba(16, 185, 129, 0.5);
     }
     
-    /* Results section */
-    .result-header {
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: #1e293b;
-        margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 3px solid #667eea;
+    /* Success box */
+    .success-box {
+        text-align: center;
+        padding: 2rem;
+        background: rgba(16, 185, 129, 0.1);
+        border-radius: 16px;
+        margin-bottom: 2rem;
+        border: 2px solid rgba(16, 185, 129, 0.3);
+        backdrop-filter: blur(10px);
+    }
+    
+    .success-box h2 {
+        color: #6ee7b7;
+        margin: 0;
+    }
+    
+    .success-box p {
+        color: #a7f3d0;
+        margin-top: 0.5rem;
     }
     
     /* Footer */
     .footer {
         text-align: center;
         padding: 2rem;
-        color: #64748b;
+        color: #a78bfa;
         font-size: 0.9rem;
         margin-top: 3rem;
+    }
+    
+    .footer p {
+        color: #c4b5fd;
+    }
+    
+    /* Progress bar */
+    .stProgress > div > div > div {
+        background: linear-gradient(90deg, #8b5cf6 0%, #a78bfa 100%);
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(167, 139, 250, 0.5);
+    }
+    
+    /* Divider */
+    hr {
+        margin: 2rem 0;
+        border: none;
+        height: 1px;
+        background: linear-gradient(90deg, transparent 0%, rgba(167, 139, 250, 0.3) 50%, transparent 100%);
     }
     
     /* Animations */
@@ -221,28 +365,23 @@ st.markdown("""
         to { opacity: 1; transform: translateY(0); }
     }
     
+    @keyframes glow {
+        0%, 100% { box-shadow: 0 0 20px rgba(167, 139, 250, 0.3); }
+        50% { box-shadow: 0 0 40px rgba(167, 139, 250, 0.5); }
+    }
+    
     .animate-fade-in {
         animation: fadeIn 0.6s ease-out;
     }
     
-    /* Progress bar custom styling */
-    .stProgress > div > div > div {
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-        border-radius: 10px;
-    }
-    
-    /* Divider */
-    hr {
-        margin: 2rem 0;
-        border: none;
-        height: 1px;
-        background: linear-gradient(90deg, transparent 0%, #e2e8f0 50%, transparent 100%);
+    .animate-glow {
+        animation: glow 2s ease-in-out infinite;
     }
 </style>
 """, unsafe_allow_html=True)
 
 # Hero Section
-st.markdown('<h1 class="hero-title animate-fade-in">🚀 AI Competitor Intelligence Engine</h1>', unsafe_allow_html=True)
+st.markdown('<h1 class="hero-title animate-fade-in">🌙 AI Competitor Intelligence Engine</h1>', unsafe_allow_html=True)
 st.markdown('<p class="hero-subtitle">Powered by 5 Autonomous AI Agents | CrewAI + Gemini</p>', unsafe_allow_html=True)
 st.markdown('''
 <p class="hero-description">
@@ -319,7 +458,7 @@ if submit:
                 status_placeholder.markdown(f'''
                 <div class="agent-card">
                     <strong>{agent_name}</strong><br>
-                    <small style="color: #64748b;">{agent_desc}</small>
+                    <small>{agent_desc}</small>
                 </div>
                 ''', unsafe_allow_html=True)
                 
@@ -339,10 +478,9 @@ if submit:
                 st.balloons()
                 
                 st.markdown('''
-                <div style="text-align: center; padding: 2rem; background: linear-gradient(135deg, #10b98115 0%, #05966915 100%); 
-                border-radius: 16px; margin-bottom: 2rem; border: 2px solid #10b98130;">
-                    <h2 style="color: #059669; margin: 0;">✅ Intelligence Report Generated</h2>
-                    <p style="color: #64748b; margin-top: 0.5rem;">Your comprehensive content strategy is ready</p>
+                <div class="success-box">
+                    <h2>✅ Intelligence Report Generated</h2>
+                    <p>Your comprehensive content strategy is ready</p>
                 </div>
                 ''', unsafe_allow_html=True)
                 
@@ -379,7 +517,7 @@ if submit:
                 st.markdown("<br><br>", unsafe_allow_html=True)
                 
                 full_report = f"""
-# 🚀 COMPETITOR INTELLIGENCE REPORT
+# 🌙 COMPETITOR INTELLIGENCE REPORT
 **Topic:** {topic}
 **Brand:** {brand_name}
 **Generated:** {time.strftime('%Y-%m-%d %H:%M:%S')}
@@ -429,7 +567,7 @@ if submit:
 # Footer
 st.markdown('''
 <div class="footer">
-    <p style="font-weight: 600; color: #475569;">Built with ❤️ using CrewAI + Gemini</p>
+    <p style="font-weight: 600;">Built with ❤️ using CrewAI + Gemini</p>
     <p>5-Agent Autonomous System | Multi-Platform Content Generation</p>
 </div>
 ''', unsafe_allow_html=True)
