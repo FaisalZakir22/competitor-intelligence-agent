@@ -1,7 +1,19 @@
 import streamlit as st
-from agents import generate_competitor_intelligence
+import os
 import time
 
+# Check if GROQ_API_KEY exists
+if not os.getenv("GROQ_API_KEY"):
+    st.error("⚠️ GROQ_API_KEY not found in Streamlit secrets!")
+    st.stop()
+
+# Import agents after dependency check
+try:
+    from agents import generate_competitor_intelligence
+except ImportError as e:
+    st.error(f"❌ Error importing agents: {str(e)}")
+    st.info("💡 Make sure all dependencies are installed in requirements.txt")
+    st.stop()
 # Page configuration
 st.set_page_config(
     page_title="Competitor Intelligence Engine", 
