@@ -15,13 +15,15 @@ except:
 if not gemini_api_key:
     raise ValueError("❌ GOOGLE_API_KEY not found!")
 
-# Configure Gemini using CrewAI's LLM class
+# Configure Gemini using direct model specification
 gemini_llm = LLM(
-    model="gemini/gemini-1.5-flash",
-    api_key=gemini_api_key
+    model="gemini-1.5-flash-002",  # Use specific version
+    api_key=gemini_api_key,
+    base_url="https://generativelanguage.googleapis.com/v1beta"
 )
 
 print(f"✅ Using Gemini 1.5 Flash via CrewAI LLM")
+
 
 # Agent 1: Competitor Intelligence Researcher
 intelligence_agent = Agent(
