@@ -1,5 +1,4 @@
-from crewai_tools import tool
-import requests
+from crewai.tools import tool
 
 @tool("Competitor Research Engine")
 def research_competitors(topic: str) -> str:
