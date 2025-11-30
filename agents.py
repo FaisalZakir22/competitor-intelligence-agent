@@ -12,7 +12,8 @@ if not groq_api_key:
     raise ValueError("❌ GROQ_API_KEY not found in .env file!")
 
 # Set environment variables for CrewAI to use Groq
-os.environ["OPENAI_API_KEY"] = groq_api_key
+os.environ["OPENAI_MODEL_NAME"] = "llama-3.1-8b-instant"
+
 os.environ["OPENAI_API_BASE"] = "https://api.groq.com/openai/v1"
 os.environ["OPENAI_MODEL_NAME"] = "llama-3.3-70b-versatile"
 
