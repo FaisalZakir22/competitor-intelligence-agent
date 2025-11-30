@@ -18,11 +18,6 @@ os.environ["OPENAI_MODEL_NAME"] = "gemini-1.5-flash"
 
 print(f"✅ Using Gemini Pro API")
 
-# Rest of your agents code stays the same...
-# Agent 1: Competitor Intelligence Researcher
-intelligence_agent = Agent(
-    role='Competitive Intelligence Researcher',
-    # ... (keep everything else as is)
 
 
 # Agent 1: Competitor Intelligence Researcher
