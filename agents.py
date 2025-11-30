@@ -16,12 +16,19 @@ except:
 if not gemini_api_key:
     raise ValueError("❌ GOOGLE_API_KEY not found!")
 
-# Configure Gemini LLM
+# Configure Gemini LLM - use gemini/ prefix for LiteLLM
+from litellm import completion
+import os
+
+os.environ["GEMINI_API_KEY"] = gemini_api_key
+
 gemini_llm = ChatGoogleGenerativeAI(
     model="gemini-1.5-flash",
     google_api_key=gemini_api_key,
     temperature=0.7
 )
+
+
 
 print(f"✅ Using Gemini 1.5 Flash")
 
