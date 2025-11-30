@@ -1,6 +1,7 @@
 from crewai import Agent, Task, Crew
 from analyzer import research_competitors, analyze_trends, find_content_gaps
 from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI
 import os
 
 load_dotenv()
@@ -15,13 +16,14 @@ except:
 if not gemini_api_key:
     raise ValueError("❌ GOOGLE_API_KEY not found!")
 
-# Configure Gemini for CrewAI
-os.environ["OPENAI_API_KEY"] = gemini_api_key
-os.environ["OPENAI_API_BASE"] = "https://generativelanguage.googleapis.com/v1beta/openai/"
-os.environ["OPENAI_MODEL_NAME"] = "gemini-1.5-pro-latest"
+# Configure Gemini LLM
+gemini_llm = ChatGoogleGenerativeAI(
+    model="gemini-1.5-flash",
+    google_api_key=gemini_api_key,
+    temperature=0.7
+)
 
-
-print(f"✅ Using Gemini API")
+print(f"✅ Using Gemini 1.5 Flash")
 
 # Agent 1: Competitor Intelligence Researcher
 intelligence_agent = Agent(
@@ -31,6 +33,7 @@ intelligence_agent = Agent(
     researching market leaders. You excel at identifying key players, understanding their content 
     strategies, and spotting patterns in what makes competitors successful.""",
     tools=[research_competitors],
+    llm=gemini_llm,
     verbose=True,
     allow_delegation=False
 )
@@ -43,6 +46,7 @@ trend_agent = Agent(
     go mainstream. You understand what makes content viral and can identify the hooks, angles, 
     and formats that drive maximum engagement.""",
     tools=[analyze_trends],
+    llm=gemini_llm,
     verbose=True,
     allow_delegation=False
 )
@@ -55,6 +59,7 @@ gap_agent = Agent(
     You can see what competitors are missing and identify content gaps that represent untapped 
     potential for engagement and authority building.""",
     tools=[find_content_gaps],
+    llm=gemini_llm,
     verbose=True,
     allow_delegation=False
 )
@@ -67,6 +72,7 @@ content_strategist = Agent(
     audience psychology. You craft content ideas that stop scrolls, spark conversations, and 
     establish thought leadership. You understand different content formats (carousels, threads, 
     videos, long-form) and can adapt ideas for maximum impact.""",
+    llm=gemini_llm,
     verbose=True,
     allow_delegation=False
 )
@@ -80,6 +86,7 @@ content_writer = Agent(
     content that delivers value, and CTAs that drive action. You know LinkedIn prefers professional 
     insights, Instagram loves storytelling with visuals, Twitter rewards punchy threads, TikTok 
     thrives on hooks and quick value, and Facebook builds community through relatable content.""",
+    llm=gemini_llm,
     verbose=True,
     allow_delegation=False
 )
