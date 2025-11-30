@@ -8,90 +8,347 @@ except Exception as e:
     st.error(f"❌ Error loading agents: {str(e)}")
     st.stop()
 
-# Page config
+# Page config with custom theme
 st.set_page_config(
-    page_title="Competitor Intelligence Agent",
-    page_icon="🤖",
-    layout="wide"
+    page_title="Competitor Intelligence Engine",
+    page_icon="🚀",
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
-# Title
-st.title("🤖 Autonomous Competitor Intelligence Engine")
-st.markdown("*Powered by 5 AI Agents | CrewAI + Gemini*")
-
-# Description
+# Custom CSS for premium aesthetics
 st.markdown("""
-This AI system analyzes competitors, identifies content gaps, and generates:
-- ✅ **25-30 unique content ideas**
-- ✅ **5 ready-to-publish posts** (LinkedIn, Instagram, Twitter, TikTok, Facebook)
-""")
+<style>
+    /* Import Google Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+    
+    /* Global Styles */
+    * {
+        font-family: 'Inter', sans-serif;
+    }
+    
+    /* Main container */
+    .main {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 2rem;
+    }
+    
+    /* Content wrapper */
+    .block-container {
+        max-width: 1200px;
+        padding: 3rem 2rem;
+        background: rgba(255, 255, 255, 0.98);
+        border-radius: 24px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        backdrop-filter: blur(10px);
+    }
+    
+    /* Hero section */
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-align: center;
+        margin-bottom: 0.5rem;
+        line-height: 1.2;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.1rem;
+        color: #64748b;
+        text-align: center;
+        margin-bottom: 1rem;
+        font-weight: 400;
+    }
+    
+    .hero-description {
+        font-size: 1rem;
+        color: #475569;
+        text-align: center;
+        max-width: 700px;
+        margin: 0 auto 2rem auto;
+        line-height: 1.6;
+    }
+    
+    /* Feature badges */
+    .feature-badges {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 3rem;
+    }
+    
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.5rem 1.2rem;
+        background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+        border: 1px solid #667eea30;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #667eea;
+    }
+    
+    /* Input styling */
+    .stTextInput > div > div > input {
+        border-radius: 12px;
+        border: 2px solid #e2e8f0;
+        padding: 0.8rem 1.2rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #f8fafc;
+    }
+    
+    .stTextInput > div > div > input:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        background: white;
+    }
+    
+    /* Button styling */
+    .stButton > button {
+        width: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(102, 126, 234, 0.5);
+    }
+    
+    /* Progress section */
+    .progress-container {
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        padding: 2rem;
+        border-radius: 16px;
+        margin: 2rem 0;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .agent-card {
+        background: white;
+        padding: 1.2rem;
+        border-radius: 12px;
+        margin: 0.8rem 0;
+        border-left: 4px solid #667eea;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+    
+    .agent-card:hover {
+        transform: translateX(4px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Tabs styling */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 0.5rem;
+        background: #f8fafc;
+        padding: 0.5rem;
+        border-radius: 12px;
+    }
+    
+    .stTabs [data-baseweb="tab"] {
+        border-radius: 8px;
+        padding: 0.8rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .stTabs [aria-selected="true"] {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
+    /* Success/Error messages */
+    .stSuccess, .stError, .stInfo {
+        border-radius: 12px;
+        padding: 1rem 1.5rem;
+        border: none;
+    }
+    
+    /* Download button */
+    .stDownloadButton > button {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 1rem 2rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .stDownloadButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4);
+    }
+    
+    /* Results section */
+    .result-header {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 3px solid #667eea;
+    }
+    
+    /* Footer */
+    .footer {
+        text-align: center;
+        padding: 2rem;
+        color: #64748b;
+        font-size: 0.9rem;
+        margin-top: 3rem;
+    }
+    
+    /* Animations */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .animate-fade-in {
+        animation: fadeIn 0.6s ease-out;
+    }
+    
+    /* Progress bar custom styling */
+    .stProgress > div > div > div {
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        border-radius: 10px;
+    }
+    
+    /* Divider */
+    hr {
+        margin: 2rem 0;
+        border: none;
+        height: 1px;
+        background: linear-gradient(90deg, transparent 0%, #e2e8f0 50%, transparent 100%);
+    }
+</style>
+""", unsafe_allow_html=True)
 
-# Input form
-with st.form("intelligence_form"):
-    col1, col2 = st.columns(2)
+# Hero Section
+st.markdown('<h1 class="hero-title animate-fade-in">🚀 AI Competitor Intelligence Engine</h1>', unsafe_allow_html=True)
+st.markdown('<p class="hero-subtitle">Powered by 5 Autonomous AI Agents | CrewAI + Gemini</p>', unsafe_allow_html=True)
+st.markdown('''
+<p class="hero-description">
+    Transform competitor research into actionable content strategy. Our AI agents analyze your niche, 
+    identify gaps, and generate platform-optimized content in minutes.
+</p>
+''', unsafe_allow_html=True)
+
+# Feature Badges
+st.markdown('''
+<div class="feature-badges">
+    <span class="badge">✨ Zero Manual Research</span>
+    <span class="badge">🎯 25-30 Content Ideas</span>
+    <span class="badge">📱 5 Platform Posts</span>
+    <span class="badge">⚡ 5-Agent System</span>
+</div>
+''', unsafe_allow_html=True)
+
+# Spacer
+st.markdown("<br>", unsafe_allow_html=True)
+
+# Input Form
+with st.form("intelligence_form", clear_on_submit=False):
+    col1, col2 = st.columns(2, gap="large")
     
     with col1:
         topic = st.text_input(
-            "🎯 Topic/Niche",
-            placeholder="e.g., AI productivity tools, fitness coaching",
-            help="Enter the niche or topic you want to analyze"
+            "🎯 Topic or Niche",
+            placeholder="e.g., AI productivity tools, sustainable fashion",
+            help="Enter the industry or niche you want to analyze",
+            label_visibility="visible"
         )
     
     with col2:
         brand_name = st.text_input(
             "🏢 Your Brand Name",
-            placeholder="e.g., MyBrand, TechStartup",
-            help="Your brand or company name"
+            placeholder="e.g., TechVision, GreenStyle",
+            help="Your company or personal brand name",
+            label_visibility="visible"
         )
     
-    submit = st.form_submit_button("🚀 Generate Competitor Intelligence Report", use_container_width=True)
+    st.markdown("<br>", unsafe_allow_html=True)
+    submit = st.form_submit_button("🚀 Generate Intelligence Report", use_container_width=True)
 
-# Process form submission
+# Process Submission
 if submit:
     if not topic or not brand_name:
-        st.error("⚠️ Please fill in both fields!")
+        st.error("⚠️ Please fill in both fields to continue!")
     else:
-        # Progress tracking
-        progress_container = st.container()
+        # Progress Section
+        st.markdown("<br>", unsafe_allow_html=True)
         
-        with progress_container:
-            st.markdown("---")
-            st.subheader("🔄 Agents Working...")
+        with st.container():
+            st.markdown('<div class="progress-container">', unsafe_allow_html=True)
+            st.markdown("### 🤖 AI Agents Working")
+            st.markdown("*Watch our intelligent agents collaborate in real-time*")
             
-            # Agent status
-            agent_status = st.empty()
-            progress_bar = st.progress(0)
+            progress_bar = st.progress(0, text="Initializing agents...")
+            status_placeholder = st.empty()
             
-            # Simulate agent progress (since CrewAI doesn't provide real-time updates)
+            # Agent Progress Animation
             agents = [
-                "🔍 Researching Competitors",
-                "📊 Analyzing Trends",
-                "🎯 Finding Content Gaps",
-                "💡 Generating Content Ideas",
-                "✍️ Crafting Platform Posts"
+                ("🔍 Competitive Intelligence Researcher", "Analyzing top competitors and their strategies..."),
+                ("📊 Trend Analysis Specialist", "Identifying viral patterns and engagement drivers..."),
+                ("🎯 Strategic Gap Analyzer", "Finding underserved opportunities..."),
+                ("💡 Content Strategist", "Generating 25-30 unique content ideas..."),
+                ("✍️ Multi-Platform Writer", "Crafting platform-optimized posts...")
             ]
             
-            # Show progress
-            for i, agent in enumerate(agents):
-                agent_status.info(f"**Agent {i+1}/5:** {agent}")
-                progress_bar.progress((i + 1) * 20)
-                time.sleep(0.5)  # Brief delay for UX
+            for i, (agent_name, agent_desc) in enumerate(agents):
+                progress = int((i + 1) / len(agents) * 100)
+                progress_bar.progress(progress, text=f"Agent {i+1}/5 Active")
+                
+                status_placeholder.markdown(f'''
+                <div class="agent-card">
+                    <strong>{agent_name}</strong><br>
+                    <small style="color: #64748b;">{agent_desc}</small>
+                </div>
+                ''', unsafe_allow_html=True)
+                
+                time.sleep(0.8)
             
-            # Run the crew
+            # Execute AI Crew
             try:
-                with st.spinner("🤖 AI Agents analyzing..."):
+                with st.spinner("🧠 Deep analysis in progress..."):
                     result = generate_competitor_intelligence(topic, brand_name)
                 
-                agent_status.success("✅ All agents completed successfully!")
-                progress_bar.progress(100)
+                progress_bar.progress(100, text="✅ Complete!")
+                status_placeholder.success("🎉 **All agents completed successfully!**")
+                st.markdown('</div>', unsafe_allow_html=True)
                 
-                # Display results
-                st.markdown("---")
-                st.success("🎉 **Report Generated Successfully!**")
+                # Results Section
+                st.markdown("<br><br>", unsafe_allow_html=True)
+                st.balloons()
                 
-                # Results tabs
+                st.markdown('''
+                <div style="text-align: center; padding: 2rem; background: linear-gradient(135deg, #10b98115 0%, #05966915 100%); 
+                border-radius: 16px; margin-bottom: 2rem; border: 2px solid #10b98130;">
+                    <h2 style="color: #059669; margin: 0;">✅ Intelligence Report Generated</h2>
+                    <p style="color: #64748b; margin-top: 0.5rem;">Your comprehensive content strategy is ready</p>
+                </div>
+                ''', unsafe_allow_html=True)
+                
+                # Tabs for Results
                 tab1, tab2, tab3, tab4, tab5 = st.tabs([
-                    "📊 Competitor Research",
+                    "🔍 Competitor Research",
                     "📈 Trend Analysis",
                     "🎯 Content Gaps",
                     "💡 Content Ideas (25-30)",
@@ -99,65 +356,80 @@ if submit:
                 ])
                 
                 with tab1:
-                    st.markdown("### 🔍 Competitor Intelligence Report")
-                    st.markdown(str(result.get('competitor_research', 'No data')))
+                    st.markdown('<p class="result-header">Competitive Intelligence Report</p>', unsafe_allow_html=True)
+                    st.markdown(str(result.get('competitor_research', 'No data available')))
                 
                 with tab2:
-                    st.markdown("### 📈 Trending Content Patterns")
-                    st.markdown(str(result.get('trend_analysis', 'No data')))
+                    st.markdown('<p class="result-header">Trending Content Patterns</p>', unsafe_allow_html=True)
+                    st.markdown(str(result.get('trend_analysis', 'No data available')))
                 
                 with tab3:
-                    st.markdown("### 🎯 Strategic Content Gaps")
-                    st.markdown(str(result.get('content_gaps', 'No data')))
+                    st.markdown('<p class="result-header">Strategic Content Gaps</p>', unsafe_allow_html=True)
+                    st.markdown(str(result.get('content_gaps', 'No data available')))
                 
                 with tab4:
-                    st.markdown("### 💡 25-30 Unique Content Ideas")
-                    st.markdown(str(result.get('content_ideas', 'No data')))
+                    st.markdown('<p class="result-header">Unique Content Ideas</p>', unsafe_allow_html=True)
+                    st.markdown(str(result.get('content_ideas', 'No data available')))
                 
                 with tab5:
-                    st.markdown("### ✍️ Ready-to-Publish Posts")
-                    st.markdown(str(result.get('platform_posts', 'No data')))
+                    st.markdown('<p class="result-header">Ready-to-Publish Posts</p>', unsafe_allow_html=True)
+                    st.markdown(str(result.get('platform_posts', 'No data available')))
                 
-                # Download button
-                st.markdown("---")
+                # Download Section
+                st.markdown("<br><br>", unsafe_allow_html=True)
+                
                 full_report = f"""
-# COMPETITOR INTELLIGENCE REPORT
+# 🚀 COMPETITOR INTELLIGENCE REPORT
 **Topic:** {topic}
 **Brand:** {brand_name}
+**Generated:** {time.strftime('%Y-%m-%d %H:%M:%S')}
 
-## COMPETITOR RESEARCH
+---
+
+## 🔍 COMPETITOR RESEARCH
 {result.get('competitor_research', 'N/A')}
 
-## TREND ANALYSIS
+---
+
+## 📈 TREND ANALYSIS
 {result.get('trend_analysis', 'N/A')}
 
-## CONTENT GAPS
+---
+
+## 🎯 CONTENT GAPS
 {result.get('content_gaps', 'N/A')}
 
-## CONTENT IDEAS
+---
+
+## 💡 CONTENT IDEAS
 {result.get('content_ideas', 'N/A')}
 
-## PLATFORM POSTS
+---
+
+## ✍️ PLATFORM POSTS
 {result.get('platform_posts', 'N/A')}
 """
                 
-                st.download_button(
-                    label="📥 Download Full Report",
-                    data=full_report,
-                    file_name=f"competitor_intelligence_{topic.replace(' ', '_')}.txt",
-                    mime="text/plain",
-                    use_container_width=True
-                )
+                col1, col2, col3 = st.columns([1, 2, 1])
+                with col2:
+                    st.download_button(
+                        label="📥 Download Complete Report",
+                        data=full_report,
+                        file_name=f"competitor_intelligence_{topic.replace(' ', '_')}.md",
+                        mime="text/markdown",
+                        use_container_width=True
+                    )
                 
             except Exception as e:
-                agent_status.error(f"❌ Error: {str(e)}")
-                st.error(f"**Error Details:** {str(e)}")
-                st.info("💡 Make sure your API key is valid and has sufficient quota.")
+                progress_bar.empty()
+                status_placeholder.error(f"❌ **Error:** {str(e)}")
+                st.error(f"**Details:** {str(e)}")
+                st.info("💡 Tip: Verify your API key is valid and has sufficient quota.")
 
 # Footer
-st.markdown("---")
-st.markdown("""
-<div style='text-align: center; color: #666;'>
-    <p>Built with CrewAI + Gemini | 5-Agent Multi-Platform System</p>
+st.markdown('''
+<div class="footer">
+    <p style="font-weight: 600; color: #475569;">Built with ❤️ using CrewAI + Gemini</p>
+    <p>5-Agent Autonomous System | Multi-Platform Content Generation</p>
 </div>
-""", unsafe_allow_html=True)
+''', unsafe_allow_html=True)
