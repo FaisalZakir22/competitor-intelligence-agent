@@ -6,8 +6,7 @@ load_dotenv()
 
 
 
-# Also check all available secrets
-st.write("Available secret keys:", list(st.secrets.keys()))
+
 # Import agents after dependency check
 try:
     from agents import generate_competitor_intelligence
