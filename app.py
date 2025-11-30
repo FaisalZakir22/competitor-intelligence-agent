@@ -1,12 +1,22 @@
 import streamlit as st
 import os
-import time
+from dotenv import load_dotenv
 
-# Check if GROQ_API_KEY exists
-if not os.getenv("GROQ_API_KEY"):
-    st.error("⚠️ GROQ_API_KEY not found in Streamlit secrets!")
-    st.stop()
+load_dotenv()
 
+# DEBUG: Check if secret exists
+st.write("🔍 **Debug Info:**")
+try:
+    google_key = st.secrets.get("GOOGLE_API_KEY")
+    if google_key:
+        st.success(f"✅ GOOGLE_API_KEY found in secrets! (starts with: {google_key[:10]}...)")
+    else:
+        st.error("❌ GOOGLE_API_KEY is None")
+except Exception as e:
+    st.error(f"❌ Error reading secrets: {e}")
+
+# Also check all available secrets
+st.write("Available secret keys:", list(st.secrets.keys()))
 # Import agents after dependency check
 try:
     from agents import generate_competitor_intelligence
