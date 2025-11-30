@@ -18,7 +18,8 @@ if not gemini_api_key:
 # Configure Gemini for CrewAI
 os.environ["OPENAI_API_KEY"] = gemini_api_key
 os.environ["OPENAI_API_BASE"] = "https://generativelanguage.googleapis.com/v1beta/openai/"
-os.environ["OPENAI_MODEL_NAME"] = "gemini-1.5-flash"
+os.environ["OPENAI_MODEL_NAME"] = "gemini-1.5-pro-latest"
+
 
 print(f"✅ Using Gemini API")
 
